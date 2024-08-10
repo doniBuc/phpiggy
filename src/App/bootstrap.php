@@ -7,7 +7,11 @@ declare(strict_types=1);
 require  __DIR__ . "/../../vendor/autoload.php"; // when you use autoloader frm composer
 
 use Framework\App;
+use App\Controllers\HomeController;
 
 $app = new App();
+
+// $app->get('/', ['App\Controllers\HomeController', 'home']); // php 8 introduce class a class magic const for getting the full namespace of the class, instead manually typing it
+$app->addGetRoutes('/', [HomeController::class, 'home']);
 
 return $app;
