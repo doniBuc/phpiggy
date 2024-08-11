@@ -22,6 +22,6 @@ class App
 
     public function addGetRoutes(string $path, array $controller)
     {
-        $this->router->addRoutes('GET', $path, $controller);
+        $this->router->addRoutes('GET', $p ath, $controller);
     }
 }
