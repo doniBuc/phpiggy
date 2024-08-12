@@ -10,5 +10,5 @@ use App\Controllers\{AboutController, HomeController};
 function registerRoutes(App $app)
 {
     $app->addGetRoutes('/', [HomeController::class, 'home']);
-    $app->addGetRoutes('/', [AboutController::class, 'about']);
+    $app->addGetRoutes('/about', [AboutController::class, 'about']);
 }

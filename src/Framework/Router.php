@@ -7,6 +7,7 @@ namespace Framework;
 class Router
 {
     private array $routes = [];
+    private array $middlewares = [];
 
     public function addRoutes(string $httpMethod, string $path, array $controller)
     {
@@ -44,5 +45,10 @@ class Router
 
             $controllerInstance->$function(); // or $controllerInstance->{$function}();
         }
+    }
+
+    public function addMiddleware(string $middleware) // $middlware define as classes not instance->because we want our middleware to access to our container  to inject dependencies 
+    {
+        $this->middlewares[] = $middleware;
     }
 }

@@ -10,6 +10,7 @@ class App
     private Router $router;
     private Container $container;
 
+
     function __construct($containerDefinitionsPath = null)
     {
         $this->router = new Router();
@@ -28,8 +29,13 @@ class App
         $this->router->dispatch($path, $httpMethod, $this->container);
     }
 
-    public function addGetRoutes(string $path, array $controller)
+    public function addGetRou tes(string $path, array $controller)
     {
         $this->router->addRoutes('GET', $path, $controller);
+    }
+
+    public function addMiddleware(string $middleware)
+    {
+        $this->router->addMiddleware($middleware);
     }
 }
