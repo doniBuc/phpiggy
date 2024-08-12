@@ -16,14 +16,14 @@ class TemplateEngine
 
         ob_start();
 
-        include $this->resolve($template);
+        include $this->resolvePath($template);
 
         $output = ob_get_contents(); // return as a string 
         ob_end_clean();
         return $output;
     }
 
-    public function resolve($path)
+    public function resolvePath($path)
     {
         return  "{$this->basePath}/{$path}";
     }

@@ -1,4 +1,4 @@
-<?php include $this->resolve('partials/_header.php') ?>
+<?php include $this->resolvePath('partials/_header.php') ?>
 
 <!-- Start Main Content Area -->
 <section class="container mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
@@ -260,7 +260,7 @@
 </section>
 <!-- End Main Content Area -->
 
-<?php include $this->resolve('partials/_footer.php') ?>
+<?php include $this->resolvePath('partials/_footer.php') ?>
 </body>
 
 </html>

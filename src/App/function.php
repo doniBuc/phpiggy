@@ -7,3 +7,9 @@ function dd(mixed $value)
     echo "<pre>";
     die();
 };
+
+function escaping(mixed $value)
+{
+
+    return htmlspecialchars((string) $value);
+}
