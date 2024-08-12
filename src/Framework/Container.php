@@ -4,7 +4,9 @@ namespace Framework;
 
 
 use App\Config\Paths;
+use Framework\Exceptions\ContainerException;
 use ReflectionClass;
+
 
 class Container
 {
@@ -23,6 +25,11 @@ class Container
     public function resolve($className)
     {
         $reflectionClass =  new ReflectionClass($className);
+
+        if (!$reflectionClass->isInstantiable()) {
+            throw new ContainerException("Class {$reflectionClass} is not instantiable");
+        }
+
         dd($reflectionClass);
     }
 }
