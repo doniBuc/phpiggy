@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Framework\Rules\RequiredRule;
+use Framework\Rules\{RequiredRule};
 use Framework\Validator;
 
 
@@ -17,7 +17,7 @@ class ValidatorService
     {
         $this->validator = new Validator();
 
-        //create or register the rule
+        //create or register the rule\
         $this->validator->addRule('required', new RequiredRule()); // we passed an instance, previously we provide only class name however our validator is simple 
     }
 
