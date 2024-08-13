@@ -13,6 +13,6 @@ class RegisterController
 
     public function register()
     {
-        $this->view->render('register.php', ["title" => "Register"]);
+        echo $this->view->render('register.php', ["title" => "Register"]);
     }
 }

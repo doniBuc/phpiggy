@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Config;
 
 use Framework\App;
-use App\Controllers\{AboutController, HomeController};
+use App\Controllers\{AboutController, HomeController, RegisterController};
 
 function registerRoutes(App $app)
 {
