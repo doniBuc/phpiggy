@@ -10,9 +10,9 @@ use ReflectionClass, ReflectionNamedType;
 
 class Container
 {
-
     private array $definitions = [];
     private array $resolved = []; // for singleton pattern -> only one instance can create of a class
+
     public function addDefinitions(array $newDefinitions)
     {
         //using merge_array()fn
@@ -58,9 +58,9 @@ class Container
             if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {  // there is other validation we can perform but this is ok 
                 throw new ContainerException("Failed to resolve {$className} because invalid param name. ");
             }
+            $dependencies[] = $this->get($type->getName()); // since we required a string id we passed along the name of type associated with current parameter since paramater so its pointed to the name of the class
         }
 
-        $dependencies[] = $this->get($type->getName()); // since we required a string id we passed along the name of type associated with current parameter since paramater so its pointed to the name of the class
 
         // dd($dependencies);
         return $reflectionClass->newInstanceArgs($dependencies);
@@ -70,7 +70,6 @@ class Container
     {
 
         if (!array_key_exists($id, $this->definitions)) {
-
             throw new ContainerException("Class {$id} does not exist in container");
         }
 
@@ -79,7 +78,6 @@ class Container
         }
 
         $factory = $this->definitions[$id];
-
         $dependecy = $factory(); // invoke the fn
 
         $this->resolved[$id] = $dependecy;
