@@ -29,7 +29,7 @@ class App
         $this->router->dispatch($path, $httpMethod, $this->container);
     }
 
-    public function addGetRou tes(string $path, array $controller)
+    public function addGetRoutes(string $path, array $controller)
     {
         $this->router->addRoutes('GET', $path, $controller);
     }

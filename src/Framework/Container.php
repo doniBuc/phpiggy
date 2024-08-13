@@ -12,7 +12,7 @@ class Container
 {
 
     private array $definitions = [];
-
+    private array $resolved = []; // for singleton pattern -> only one instance can create of a class
     public function addDefinitions(array $newDefinitions)
     {
         //using merge_array()fn
@@ -74,9 +74,15 @@ class Container
             throw new ContainerException("Class {$id} does not exist in container");
         }
 
+        if (array_key_exists($id, $this->resolved)) {
+            return $this->resolved[$id];
+        }
+
         $factory = $this->definitions[$id];
 
         $dependecy = $factory(); // invoke the fn
+
+        $this->resolved[$id] = $dependecy;
 
         return $dependecy;
     }

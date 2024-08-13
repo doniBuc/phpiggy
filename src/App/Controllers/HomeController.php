@@ -13,11 +13,12 @@ class HomeController
 
     public function __construct(private TemplateEngine $view)
     {
+
         // $this->view = new TemplateEngine(Paths::VIEW); // we can hard code the path of tempplate view pero dahil mag rereference tayo ng ibat - ibang view path mas mainam meron isang single file contain all path -> Config folder
     }
 
     public function home()
     {
-        echo $this->view->render("index.php", ["title" => "Home Page"]);
+        echo $this->view->render("index.php");
     }
 }

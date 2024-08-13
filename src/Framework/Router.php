@@ -43,7 +43,20 @@ class Router
 
             $controllerInstance = $container ? $container->resolve($classController) : new $classController();
 
-            $controllerInstance->$function(); // or $controllerInstance->{$function}();
+            // $controllerInstance->$function(); // or   controllerInstance->{$function}(); This syntax used when the name of the method is stored in a variable ->$function() instead of ->function().
+
+            // we looping the middleware
+            $action = fn() => $controllerInstance->$function(); // first stored not invoke immediately  in var
+
+            foreach ($this->middlewares as $middleware) {
+
+                $middlewareInstance = $container ? $container->resolve($middleware) : new $middleware; // need instantiate the middleware before use i  t
+                $action = fn() => $middlewareInstance->process($action);
+            }
+
+            $action();
+
+            return;
         }
     }
 
