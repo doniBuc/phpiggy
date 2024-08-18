@@ -18,7 +18,8 @@ class AuthController
 
     public function register()
     {
-        echo $this->view->render('register.php', ["title" => "Register"]);
+        // echo $this->view->render('register.php', ['errors' => $_SESSION['errors']]); pwede gamitin it to inject error data sa template, but dahil if marami tayo form we repeat this process to better gumawa ng middleware ->FlashMidleware 
+        echo $this->view->render('register.php');
     }
     public function registered()
     {
