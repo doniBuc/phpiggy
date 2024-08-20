@@ -31,31 +31,41 @@ $db = new Database(
     ''
 );
 
-try {
+// Executing Sql Command in this script
+// try {
 
-    $db->connection->beginTransaction();
+//     $db->connection->beginTransaction();
 
-    $db->connection->query("INSERT INTO products(name) VALUES ('item7')");
+//     $db->connection->query("INSERT INTO products(name) VALUES ('item7')");
 
-    $search = "item1";
+//     $search = "item1";
 
-    $query = "SELECT * FROM products WHERE name =:name";
-    // $stmt = $db->connection->query($query, PDO::FETCH_ASSOC);
-    $stmt = $db->connection->prepare($query); // to prevent sql injection but not execute the query, unlike query that immediately executed ()
+//     $query = "SELECT * FROM products WHERE name =:name";
+//     // $stmt = $db->connection->query($query, PDO::FETCH_ASSOC);
+//     $stmt = $db->connection->prepare($query); // to prevent sql injection but not execute the query, unlike query that immediately executed ()
 
-    $stmt->bindValue('name', 'item7', PDO::PARAM_STR);
+//     $stmt->bindValue('name', 'item7', PDO::PARAM_STR);
 
-    $stmt->execute(); // 1. ->execute([$search]) for placeholder (?) OR ->execute(['name'=>$search]) for name paramater (:name) OR using bindValue()
+//     $stmt->execute(); // 1. ->execute([$search]) for placeholder (?) OR ->execute(['name'=>$search]) for name paramater (:name) OR using bindValue()
 
-    var_dump($stmt->fetchAll(PDO::FETCH_OBJ));
+//     var_dump($stmt->fetchAll(PDO::FETCH_OBJ));
 
-    $db->connection->commit();
-} catch (Exception $error) {
+//     $db->connection->commit();
+// } catch (Exception $error) {
 
-    if ($db->connection->inTransaction()) // need to check if does have active transanction
-    {
-        $db->connection->rollBack(); // if transaction is not active this method produce error,
-    }
+//     if ($db->connection->inTransaction()) // need to check if does have active transanction
+//     {
+//         $db->connection->rollBack(); // if transaction is not active this method produce error,
+//     }
 
-    echo "Transaction failed";
-}
+//     echo "Transaction failed";
+// }
+
+// LOADING OF OUR database.sql file into this command line
+
+// There are difference solution of loading a file in cmd file
+// In our situation we only interested reading a file contents -> simply fn called file_get_contents
+
+$sqlfile = file_get_contents("./database.sql");
+
+$db->connection->query($sqlfile);
