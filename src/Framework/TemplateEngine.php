@@ -12,7 +12,7 @@ class TemplateEngine
     public function __construct(private string $basePath) // basePath prop store the absolute path to the dir of our template
     {}
 
-    public function render(string $template, array $data = [])
+    public function  render(string $template, array $data = [])
     {
         extract($data, EXTR_SKIP); // extract return the key of each array as variable 
         extract($this->globalTemplateData, EXTR_SKIP); // extra_skip -> prevent var to overwritten/skip the similar name

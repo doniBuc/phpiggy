@@ -1,12 +1,14 @@
 <?php
 // Refactoring this code seperate the logic
+
 // $driver = 'mysql';
+
 // // method for convert array into string url
-// $config = http_build_query(data: [
-//     "host" => "localhost",
-//     "port" => 3306,
-//     "dbname" => "phpiggy"
-// ], arg_separator: ';');
+$config = http_build_query(data: [
+    "host" => "localhost",
+    "port" => 3306,
+    "dbname" => "phpiggy"
+], arg_separator: ';');
 
 // $dsn = "{$driver}:{$config}";
 // $username = 'root';
@@ -40,7 +42,7 @@ $db = new Database(
 
 //     $search = "item1";
 
-//     $query = "SELECT * FROM products WHERE name =:name";
+//     $query = "SELECT * FROM products WHERE name =:name"; // WHERE name = '$search';
 //     // $stmt = $db->connection->query($query, PDO::FETCH_ASSOC);
 //     $stmt = $db->connection->prepare($query); // to prevent sql injection but not execute the query, unlike query that immediately executed ()
 
@@ -68,4 +70,5 @@ $db = new Database(
 
 $sqlfile = file_get_contents("./database.sql");
 
-$db->connection->query($sqlfile);
+// $db->connection->query($sqlfile);// nag change due to function in Database Class
+$db->query($sqlfile);

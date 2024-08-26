@@ -8,7 +8,13 @@ require  __DIR__ . "/../../vendor/autoload.php"; // when you use autoloader frm 
 
 use Framework\App;
 use App\Config\Paths;
+use Dotenv\Dotenv;
+
 use function App\Config\{registerRoutes, registerMiddleware}; // import the fn
+
+
+$dotenv = Dotenv::createImmutable(Paths::ROOT); // this class has a method for loading env file-> this method create a inst of Dotenv Class pass root dir of our project it will detect the env files
+$dotenv->load(); // we can load the file after call our env var is now accessible in our apps
 
 //use App\Controllers\{HomeController, AboutController}; -> Routes.php
 

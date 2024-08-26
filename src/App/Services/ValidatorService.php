@@ -11,7 +11,10 @@ use Framework\Rules\{
     MinRule,
     InRule,
     UrlRule,
-    MatchRule
+    MatchRule,
+    LengthMaxRule,
+    NumericRule,
+    DateFormatRule
 };
 
 
@@ -29,8 +32,11 @@ class ValidatorService
         $this->validator->addRule('email', new EmailRule());
         $this->validator->addRule('min', new MinRule());
         $this->validator->addRule('in', new InRule());
-        $this->validator->addRule('url', new UrlRule);
-        $this->validator->addRule('match', new MatchRule);
+        $this->validator->addRule('url', new UrlRule());
+        $this->validator->addRule('match', new MatchRule());
+        $this->validator->addRule('lengthMax', new LengthMaxRule());
+        $this->validator->addRule('numeric', new NumericRule());
+        $this->validator->addRule('dateFormat', new DateFormatRule());
     }
 
     public function validateRegister(array $formData)
@@ -43,6 +49,22 @@ class ValidatorService
             'password' => ['required'],
             'confirmPassword' => ['required', 'match:password'],
             'tos' => ['required']
+        ]);
+    }
+
+    public function validateLogin(array $loginData)
+    {
+        $this->validator->validate($loginData, [
+            'email' => ['required', 'email'],
+            'password' => ['required']
+        ]);
+    }
+    public function validateTransaction(array $transactionData)
+    {
+        $this->validator->validate($transactionData, [
+            'description' => ['required', 'lengthMax:255'],
+            'amount' => ['required', 'numeric'],
+            'date' => ['required', 'dateFormat:Y-m-d']
         ]);
     }
 }

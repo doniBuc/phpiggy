@@ -29,17 +29,31 @@ class App
         $this->router->dispatch($path, $httpMethod, $this->container);
     }
 
-    public function addGetRoutes(string $path, array $controller)
+    public function addGetRoutes(string $path, array $controller): App
     {
         $this->router->addRoutes('GET', $path, $controller);
+        return $this;
     }
-    public function addPostRoutes(string $path, array $controller)
+    public function addDeleteRoutes(string $path, array $controller): App
+    {
+
+        $this->router->addRoutes('DELETE', $path, $controller);
+        return $this;
+    }
+
+    public function addPostRoutes(string $path, array $controller): App
     {
         $this->router->addRoutes('POST', $path, $controller);
+        return $this;
     }
 
     public function addMiddleware(string $middleware)
     {
         $this->router->addMiddleware($middleware);
+    }
+
+    public function addSpecificMiddleware(string $middleware)
+    {
+        $this->router->addRouteMiddleware($middleware);
     }
 }

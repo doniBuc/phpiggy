@@ -52,7 +52,7 @@ class Container
             $type = $param->getType();  // validating the type of params if the type is string or boolean cant be instantiate we only accept class
 
             if (!$type) {
-                throw new ContainerException("Failed to resolve {$className} because the param {$name} is missing the type hinmt");
+                throw new ContainerException("Failed to resolve {$className} because the param {$name} is missing the type hint");
             }
 
             if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {  // there is other validation we can perform but this is ok 
@@ -79,8 +79,9 @@ class Container
         }
 
         $factory = $this->definitions[$id];
-        $dependecy = $factory(); // invoke the fn
+        // $dependecy = $factory(); //// invoke the fn -> we update this because UserService
 
+        $dependecy = $factory($this);
         $this->resolved[$id] = $dependecy;
 
         return $dependecy;

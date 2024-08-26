@@ -34,6 +34,16 @@ class SessionMiddleware implements MiddlewareInterface
         {
             throw new SessionException("Headers already sent. Considering enabling outoput buffering. Data Outputted from {$fileName} -Line:{$line}");
         }
+
+        // Configuring the cookie must be done before the session started
+        session_set_cookie_params([
+            'secure' => $_ENV['APP_ENV'] === "production", // this option prevent cookies for being sent on insecure connection, since we are on development the setting should be disabled
+            'httponly' => true, // this setting prevent javascript for access the cookie
+            'samesite' => 'lax' // this setting is useful for restricting cookie to our site, by setting in into lax we allowing cookie to be accessible in our site, however if the user visit our site from external link the cookie will not sent, best option availble, strict and none other avail options 
+
+        ]);
+
+
         session_start();
         $next();
         // is possible to terminate the session earlier it can be benifical to performance

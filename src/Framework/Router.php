@@ -12,10 +12,15 @@ class Router
     public function addRoutes(string $httpMethod, string $path, array $controller)
     {
         $path = $this->pathNormalize($path);
+
+        $regexPath = preg_replace('#{[^/]+}#', '([^/]+)', $path); // for route parameter
+
         $this->routes[] = [
             'path' => $path,
             'httpMethod' => strtoupper($httpMethod),
-            'controller' => $controller
+            'controller' => $controller,
+            'middlewares' => [],
+            'regexPath' => $regexPath
         ];
     }
 
@@ -33,11 +38,21 @@ class Router
     {
 
         $path = $this->pathNormalize($path);
-        $httpMethod = strtoupper($httpMethod);
+        $httpMethod = strtoupper($_POST['_METHOD'] ?? $httpMethod); //$_POST[_METHOD] checking if form request POST with have input element with name _METHOD get the value as httpmethod
 
         foreach ($this->routes as $route) {
-            if (!preg_match("#^{$route['path']}$#", $path) || $route['httpMethod'] !== $httpMethod)
+
+            // $paramValues is reference value that passed by preg_match we can use it outside of this preg_match fn
+            if (!preg_match("#^{$route['regexPath']}$#", $path, $paramValues) || $route['httpMethod'] !== $httpMethod) // for path route parameter change ['path'] into ['regexPath']
                 continue;
+
+            array_shift($paramValues); // $paramValue return array of 2 index and we need the 2nd property which contain the paramValue or id of transaction
+
+            preg_match_all('#{([^/]+)}#', $route['path'], $paramKeys); //return single result getting the key we used for combining to $paramValues
+
+            $paramKeys = $paramKeys[1]; // Same with $paramValues return 2 index of array we need the 2nd only 
+
+            $params = array_combine($paramKeys, $paramValues);
 
             [$classController, $function] = $route['controller'];
 
@@ -46,9 +61,11 @@ class Router
             // $controllerInstance->$function(); // or   controllerInstance->{$function}(); This syntax used when the name of the method is stored in a variable ->$function() instead of ->function().
 
             // we looping the middleware
-            $action = fn() => $controllerInstance->$function(); // first stored not invoke immediately  in var
+            $action = fn() => $controllerInstance->$function($params); // first stored not invoke immediately  in var //pass the $param so each controller that need params array for supplied for edit.php
 
-            foreach ($this->middlewares as $middleware) {
+            $allMiddleware = [...$route['middlewares'], ...$this->middlewares]; // order is matter
+
+            foreach ($allMiddleware as $middleware) { // change the $this->middlewares into $allMiddleware in which the specific middleware for route is store
 
                 $middlewareInstance = $container ? $container->resolve($middleware) : new $middleware; // need instantiate the middleware before use i  t
                 $action = fn() => $middlewareInstance->process($action);
@@ -63,5 +80,11 @@ class Router
     public function addMiddleware(string $middleware) // $middlware define as classes not instance->because we want our middleware to access to our container  to inject dependencies 
     {
         $this->middlewares[] = $middleware;
+    }
+
+    public function addRouteMiddleware(string $middleware)
+    {
+        $lastRouteKey = array_key_last($this->routes); // return the last key
+        $this->routes[$lastRouteKey]['middlewares'][] = $middleware;
     }
 }
