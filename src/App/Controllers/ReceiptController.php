@@ -43,11 +43,53 @@ class ReceiptController
 
         $this->receiptService->validateFile($receiptFile);
 
-        $this->receiptService->upload($receiptFile);
-
-
-
+        $this->receiptService->upload($receiptFile, $transaction['id']);
 
         redirecTo("/");
+    }
+
+    public function delete(array $params)
+    {
+        $transaction = $this->transactionService->getUserTransaction($params['transaction']);
+
+        if (empty($transaction)) {
+            redirecTo('/');
+        }
+
+        $receipt = $this->receiptService->getReceipt($params['receipt']);
+
+        if (empty($receipt)) {
+            redirecTo('/');
+        }
+
+        if ($receipt['transaction_id'] !== $transaction['id']) {
+            redirecTo('/');
+        }
+
+        $this->receiptService->delete($receipt);
+    }
+
+
+    public function download(array $params)
+    {
+        $transaction = $this->transactionService->getUserTransaction($params['transaction']);
+
+        if (empty($transaction)) {
+            redirecTo('/');
+        }
+
+        $receipt = $this->receiptService->getReceipt($params['receipt']);
+
+        if (empty($receipt)) {
+            redirecTo('/');
+        }
+
+        // validating tryig access an receipt from different transaction we should compare the id of transaction into id of reciept
+        if ($receipt['transaction_id'] !== $transaction['id']) {
+            redirecTo('/');
+        }
+
+        // grabbing the file 
+        $this->receiptService->read($receipt);
     }
 }

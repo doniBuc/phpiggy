@@ -35,7 +35,7 @@ class UserService
                 'age' => $formData['age'],
                 'country' => $formData['country'],
                 'socialMediaUrl' => $formData['socialMediaUrl']
-            ],
+            ]
 
         );
 
@@ -69,5 +69,27 @@ class UserService
         // if user is authenticated, we can update the session to store user info
         $_SESSION['user'] = $user['id']; // we only need is id
 
+    }
+
+    public function logout()
+    {
+        // 1st approach: by unset you only destroying a specific variable
+        unset($_SESSION['user']);
+        session_regenerate_id();
+
+
+        //2nd approach: by using destroy all cookie
+        session_destroy();
+        $params = session_get_cookie_params();
+
+        setcookie(
+            'PHPSESSID',
+            '',
+            time() - 3600, // for security we subract random second to time now to set the expiration in past
+            $params['domain'],
+            $params['domain'],
+            $params['secure'],
+            $params['httponly']
+        );
     }
 }

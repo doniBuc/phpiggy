@@ -8,6 +8,7 @@ class Router
 {
     private array $routes = [];
     private array $middlewares = [];
+    private array $errorHandler;
 
     public function addRoutes(string $httpMethod, string $path, array $controller)
     {
@@ -75,6 +76,9 @@ class Router
 
             return;
         }
+        // if the route not find dispatch 404
+
+        $this->dispatchNotFound($container);
     }
 
     public function addMiddleware(string $middleware) // $middlware define as classes not instance->because we want our middleware to access to our container  to inject dependencies 
@@ -86,5 +90,26 @@ class Router
     {
         $lastRouteKey = array_key_last($this->routes); // return the last key
         $this->routes[$lastRouteKey]['middlewares'][] = $middleware;
+    }
+
+    public function setErrorHandler(array $controller)
+    {
+        $this->errorHandler = $controller;
+    }
+
+    public function dispatchNotFound(?Container $container)
+    {
+
+        [$classController, $function] = $this->errorHandler;
+
+        $controllerInstance = $classController ? $container->resolve($classController) : new $classController();
+
+        $action = fn() => $controllerInstance->$function();
+
+        foreach ($this->middlewares as $middleware) {
+            $middlewareInstance = $container ? $container->resolve($middleware) : new $middleware();
+            $action = fn() => $middlewareInstance->process($action);
+        }
+        $action();
     }
 }

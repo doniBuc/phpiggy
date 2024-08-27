@@ -51,10 +51,7 @@ class AuthController
 
     public function logout()
     {
-        unset($_SESSION['user']);
-
-        session_regenerate_id();
-
+        $this->userService->logout();
         redirecTo('/login');
     }
 }
